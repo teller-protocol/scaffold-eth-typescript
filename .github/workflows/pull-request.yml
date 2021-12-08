@@ -40,7 +40,7 @@ jobs:
       
       - name: 'hardhat compile'  
         run: |
-          yarn compile --force
+          yarn contracts build
         
       - name: 'build production'
         run: |
