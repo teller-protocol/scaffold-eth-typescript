@@ -36,8 +36,14 @@ if (!semver.satisfies(process.version, NODE_VERSION))
 config()
 const { isAddress, getAddress, formatUnits, parseUnits, parseEther } = utils
 
-const { COMPILING, CMC_KEY, FORKING_NETWORK, SAVE_GAS_REPORT, TESTING } =
-  process.env
+const {
+  COMPILING,
+  CMC_KEY,
+  DEFAULT_NETWORK,
+  FORKING_NETWORK,
+  SAVE_GAS_REPORT,
+  TESTING,
+} = process.env
 
 let isTesting = false
 if (COMPILING != 'true') {
@@ -53,7 +59,7 @@ if (TESTING === '1') {
 //
 // Select the network you want to deploy to here:
 //
-const defaultNetwork = 'localhost'
+const defaultNetwork = DEFAULT_NETWORK ?? 'localhost'
 
 const getMnemonic = (): string => {
   try {
