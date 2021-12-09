@@ -48,6 +48,8 @@
       "deploy-and-graph": "yarn deploy && yarn graph-ship-local",
       "theme": "yarn app theme",
       "watch-theme": "yarn app watch",
+      "template:add": "git remote add template https://github.com/teller-protocol/scaffold-eth-typescript.git",
+      "template:merge": "git merge template/main --allow-unrelated-histories --squash",
       "contracts": "yarn workspace @scaffold-eth/hardhat",
       "app": "yarn workspace @scaffold-eth/vite-app",
       "services": "yarn workspace @scaffold-eth/services",
