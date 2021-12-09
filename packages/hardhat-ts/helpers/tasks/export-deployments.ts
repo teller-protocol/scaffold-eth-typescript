@@ -1,6 +1,6 @@
 import fs from 'fs'
 
-import chalk from 'chalk'
+import * as chalk from 'chalk'
 import { Deployment } from 'hardhat-deploy/dist/types'
 import { task } from 'hardhat/config'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'

@@ -1,4 +1,4 @@
-import chalk from 'chalk'
+import * as chalk from 'chalk'
 import { makeNodeDisklet } from 'disklet'
 import { Contract } from 'ethers'
 import { DeployOptions, DeployResult, Libraries } from 'hardhat-deploy/types'
