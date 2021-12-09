@@ -1,5 +1,4 @@
-// babel-plugin-macros.config.js
-module.exports = {
+export default {
   twin: {
     preset: 'emotion',
   },
