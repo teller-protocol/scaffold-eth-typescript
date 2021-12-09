@@ -1,4 +1,4 @@
-import chai from 'chai'
+import * as chai from 'chai'
 import { BigNumber as BN } from 'ethers'
 
 chai.Assertion.overwriteMethod(
