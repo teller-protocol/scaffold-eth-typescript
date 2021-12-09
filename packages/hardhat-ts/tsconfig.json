@@ -36,8 +36,8 @@
       "helpers/*": [
         "./helpers/*"
       ],
-      "typechain/*": [
-        "./generated/typechain/*"
+      "types/typechain": [
+        "./generated/typechain/index.ts"
       ]
     }
   },
