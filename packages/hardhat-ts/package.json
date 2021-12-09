@@ -3,9 +3,8 @@
   "version": "0.1.0",
   "license": "MIT",
   "scripts": {
-    "hf": "hf() { local network=\"$1\"; shift; FORKING_NETWORK=$network yarn hh --network hardhat \"$@\"; }; hf",
-    "test": "test() { TS_NODE_TRANSPILE_ONLY=1 TESTING=1 yarn hf \"$1\" test; }; test",
-    "fork": "fork() { TS_NODE_TRANSPILE_ONLY=1 local network=\"$1\"; shift; yarn hf $network fork \"$@\"; }; fork",
+    "test": "FORKING_NETWORK=mainnet TS_NODE_TRANSPILE_ONLY=1 TESTING=1 yarn hh test",
+    "fork:mainnet": "FORKING_NETWORK=mainnet TS_NODE_TRANSPILE_ONLY=1 yarn hh fork --network hardhat",
     "chain": "yarn hh node --no-deploy",
     "compile": "COMPILING=true yarn hh compile",
     "build": "yarn compile --force && yarn tsc",
