@@ -17,7 +17,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x, 16.x]
+        node-version: [16.13.1]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -44,9 +44,8 @@ jobs:
         
       - name: 'build production'
         run: |
-          yarn shx cp ./packages/vite-app-ts/src/generated/contracts/hardhat_contracts.json.bak ./packages/vite-app-ts/src/generated/contracts/hardhat_contracts.json
-          yarn run start optimize --force 
-          yarn run build
+          yarn start optimize --force 
+          yarn build
     #  - run: yarn hardhat:test
     #  - name: Publish Unit Test Results
     #    uses: EnricoMi/publish-unit-test-result-action@v1
