@@ -226,6 +226,7 @@ export default <HardhatUserConfig>{
       chainId: 31337,
       live: false,
       allowUnlimitedContractSize: true,
+      saveDeployments: false,
       forking:
         FORKING_NETWORK == null
           ? undefined
