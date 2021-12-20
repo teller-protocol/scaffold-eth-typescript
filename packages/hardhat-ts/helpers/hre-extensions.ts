@@ -39,12 +39,16 @@ interface TokensExtension {
   get: (name: string) => Promise<ERC20>
 }
 
+interface AdvanceTimeOptions { 
+  withoutBlocks?: boolean
+}
+
 interface EVM {
   /**
    * This increases the next block's timestamp by the specified amount of seconds.
    * @param seconds {BigNumberish} Amount of seconds to increase the next block's timestamp by.
    */
-  advanceTime: (seconds: BigNumberish | moment.Duration) => Promise<void>
+  advanceTime: (seconds: BigNumberish | moment.Duration, options?: AdvanceTimeOptions) => Promise<void>
 
   /**
    * Will mine the specified number of blocks locally. This is helpful when functionality
@@ -214,12 +218,15 @@ extendEnvironment((hre) => {
   }
 
   hre.evm = {
-    async advanceTime(seconds: BigNumberish | moment.Duration): Promise<void> {
+    async advanceTime(seconds: BigNumberish | moment.Duration, option?: AdvanceTimeOptions): Promise<void> {
       const secs = moment.isDuration(seconds) ? seconds.asSeconds() : seconds
-
-      const secsPerBlock = 15
-      const blocks = BigNumber.from(secs).div(secsPerBlock).toNumber()
-      await this.advanceBlocks(blocks, secsPerBlock)
+      if (!option?.withoutBlocks) {
+        await network.provider.send('evm_increaseTime', [secs])
+      } else {  
+        const secsPerBlock = 15
+        const blocks = BigNumber.from(secs).div(secsPerBlock).toNumber()
+        await this.advanceBlocks(blocks, secsPerBlock)
+    }
     },
 
     async advanceBlocks(blocks = 1, secsPerBlock = 15): Promise<void> {
