@@ -1,4 +1,4 @@
-import fs from 'fs'
+import * as fs from 'fs'
 
 import * as chalk from 'chalk'
 import { Deployment } from 'hardhat-deploy/dist/types'
@@ -17,7 +17,7 @@ const publishReactApp = async (
   hre: HardhatRuntimeEnvironment
 ): Promise<void> => {
   await hre.run('export', {
-    exportAll: '../react-app/src/contracts/hardhat_contracts.json',
+    exportAll: '../vite-app-ts/src/generated/contracts/hardhat_contracts.json',
   })
   console.log('✅  Published contracts to the react-app package.')
 }
