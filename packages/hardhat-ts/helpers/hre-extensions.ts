@@ -40,7 +40,24 @@ interface TokensExtension {
 }
 
 interface AdvanceTimeOptions {
+  /**
+   * When set to `true`, it ensures that a block is not mined for seconds/block
+   * internal.
+   *
+   * In order for the timestamp to take effect a block must be mined. This means
+   * that if a view function is called, it will not know about the time update.
+   * Use the `mine` option to mine a block after updating the timestamp if used
+   * in conjunction with a view function on the next call.
+   */
   withoutBlocks?: boolean
+
+  /**
+   * Ensures that a block is mined after advancing the next blocks timestamp.
+   *
+   * This option should be used in conjunction with the `withoutBlocks` option
+   * when calling a view function to run any necessary checks.
+   */
+  mine?: boolean
 }
 
 interface EVM {
@@ -223,11 +240,12 @@ extendEnvironment((hre) => {
   hre.evm = {
     async advanceTime(
       seconds: BigNumberish | moment.Duration,
-      option?: AdvanceTimeOptions
+      options?: AdvanceTimeOptions
     ): Promise<void> {
       const secs = moment.isDuration(seconds) ? seconds.asSeconds() : seconds
-      if (!option?.withoutBlocks) {
+      if (options?.withoutBlocks) {
         await network.provider.send('evm_increaseTime', [secs])
+        if (options?.mine) await network.provider.send('evm_mine')
       } else {
         const secsPerBlock = 15
         const blocks = BigNumber.from(secs).div(secsPerBlock).toNumber()
