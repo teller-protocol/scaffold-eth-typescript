@@ -1,6 +1,6 @@
-import * as path from 'path'
+import path from 'path'
 
-import * as glob from 'glob'
+import glob from 'glob'
 
 const rrequire = (dir: string): void => {
   glob.sync(path.resolve(dir, '**', '*.ts')).forEach((file) => {

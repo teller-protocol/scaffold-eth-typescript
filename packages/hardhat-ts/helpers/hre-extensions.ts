@@ -5,7 +5,7 @@ import { BigNumber, BigNumberish, Contract, Signer } from 'ethers'
 import { ERC20 } from 'generated/typechain'
 import { extendEnvironment } from 'hardhat/config'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
-import * as moment from 'moment'
+import moment from 'moment'
 
 import { getTokens } from '../config'
 

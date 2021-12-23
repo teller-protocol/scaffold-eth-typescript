@@ -1,6 +1,6 @@
-import * as path from 'path'
+import path from 'path'
 
-import * as fs from 'fs-extra'
+import fs from 'fs-extra'
 import { subtask, task, types } from 'hardhat/config'
 import { HARDHAT_NETWORK_NAME } from 'hardhat/plugins'
 import { ActionType, HardhatRuntimeEnvironment } from 'hardhat/types'

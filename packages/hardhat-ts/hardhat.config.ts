@@ -8,15 +8,15 @@ import 'hardhat-gas-reporter'
 import '@nomiclabs/hardhat-ethers'
 import '@typechain/hardhat'
 
-import * as fs from 'fs'
-import * as path from 'path'
+import fs from 'fs'
+import path from 'path'
 
 import {
   TransactionReceipt,
   TransactionRequest,
 } from '@ethersproject/providers'
 import { HardhatEthersHelpers } from '@nomiclabs/hardhat-ethers/dist/src/types'
-import * as chalk from 'chalk'
+import chalk from 'chalk'
 import { config } from 'dotenv'
 import { Signer, utils } from 'ethers'
 import { HardhatUserConfig, task } from 'hardhat/config'
@@ -25,7 +25,7 @@ import {
   NetworkUserConfig,
 } from 'hardhat/types'
 import rrequire from 'helpers/rrequire'
-import * as semver from 'semver'
+import semver from 'semver'
 
 const NODE_VERSION = 'v16.13.1'
 if (!semver.satisfies(process.version, NODE_VERSION))
