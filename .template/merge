@@ -1,0 +1,285 @@
+#!/bin/zsh
+
+EC_IM_MERGE_SQUASH=10
+EC_CP_COMMIT_MERGE_SQUASH=20
+EC_CP_CHERRY_PICK_MERGE_COMMIT=21
+
+prev_branch_file_name="TEMPLATE_MERGE_PREV_BRANCH"
+error_merge_file_name="TEMPLATE_MERGE_FAIL"
+
+template="template"
+template_main="main"
+template_branch_main="$template/$template_main"
+tag_name="$template/latest-merge"
+template_url="https://github.com/teller-protocol/scaffold-eth-typescript.git"
+
+origin="origin"
+origin_main="main"
+origin_branch_main="$origin/$origin_main"
+
+tmp_branch_main="tmp/$origin_main"
+
+# Create a local directory and make sure that the files are ignored
+# Changes the working directory
+setup() {
+  # Save which directory we are currently in
+  prev_dir=$(pwd)
+
+  mkdir -p .template && cd .template || exit
+
+  # Check if we're already setup
+  if [ -f $prev_branch_file_name ]; then
+    # Load user's branch name they had initially checked out
+    init_branch=$(cat $prev_branch_file_name)
+  else
+    init_branch=$(git rev-parse --abbrev-ref HEAD)
+    # Creates the file that indicates we have begun the merge process
+    # The initial branch the user was on is stored as its contents
+    echo "$init_branch" >> $prev_branch_file_name
+  fi
+
+  # Ensure no files are tracked
+  echo "*\n!merge" > .gitignore
+}
+
+teardown() {
+  cd "$prev_dir" || exit
+}
+
+# Cleans up changes made to previous state
+teardown_success() {
+  rm $prev_branch_file_name
+  rm $error_merge_file_name
+
+  teardown
+}
+
+line_break() {
+  echo
+  echo "=============================================================================================="
+  echo
+}
+
+success_msg() {
+  line_break
+  echo "Successfully merged changes from template repo :)"
+  echo
+  echo "1. The repo's $origin_branch_main branch has been updated with the changes and pushed remotely"
+  echo "2. $origin_branch_main has been merged with your working branch ($init_branch)"
+  echo
+}
+
+fail_msg() {
+  line_break
+  echo "!! There was an issue merging the changes from the template repo !!"
+  echo
+  echo "1. Please correct any resulting conflicts"
+  echo "2. Stage your merge conflicts"
+  echo "3. Rerun this script!"
+  echo "  - NOTE: do NOT use external app/commands to resolve the conflict!!"
+  echo
+}
+
+error() {
+  echo "$1" > $error_merge_file_name
+  return "$1"
+}
+
+load_last_error() {
+  cat $error_merge_file_name 2> /dev/null || echo 0
+}
+
+# Checks if the template is added or the urls match
+remote_add() {
+  local url
+  url=$(git remote get-url $template &> /dev/null)
+  if [ $? -eq 0 ]; then
+    if [ "$url" != $template_url ]; then
+      git remote set-url template $template_url
+    fi
+  else
+    git remote add template $template_url
+  fi
+}
+
+# Ensures the template is added and then fetches
+remote_fetch() {
+  remote_add && git fetch $template &> /dev/null
+}
+
+checkout_origin() {
+  git checkout -B $origin_main $origin_branch_main &> /dev/null && git pull --ff-only &> /dev/null
+}
+
+checkout_init() {
+  git checkout "$init_branch" &> /dev/null
+}
+
+# Squash changes in the template repo since the last time changes were merge
+# We use a tag store on the origin repo to keep as a reference to this
+# After squashing, cherry-pick the squashed commit from the template repo to the local repo
+cherry_pick() {
+  cp_merge_squash
+}
+
+cp_merge_squash() {
+  # Create a temp branch to work on
+  git checkout -B $tmp_branch_main $tag_name &> /dev/null
+
+  # Squash template changes into working tree
+  git merge $template_branch_main --squash
+
+  cp_commit_merge_squash
+}
+
+cp_commit_merge_squash() {
+  # Commit the squash to tmp branch
+  if commit_merge_changes; then
+    cp_cherry_pick_merge_commit
+  else
+    error $EC_CP_COMMIT_MERGE_SQUASH
+  fi
+}
+
+cp_cherry_pick_merge_commit() {
+  # Cherry pick the squashed commit into local repo
+  if checkout_origin && git cherry-pick $tmp_branch_main; then
+    cp_cleanup
+  else
+    error $EC_CP_CHERRY_PICK_MERGE_COMMIT
+  fi
+}
+
+# Pushes changes and cleans up local repo
+cp_cleanup() {
+  push_origin
+
+  # Delete the tmp branch
+  git branch -D $tmp_branch_main &> /dev/null
+}
+
+# Continues the cherry pick and post cleanup
+cp_cherry_pick_merge_commit_fail() {
+  if git -c core.editor=true cherry-pick --continue; then
+    cp_cleanup
+  else
+    error $EC_CP_CHERRY_PICK_MERGE_COMMIT
+  fi
+}
+
+initial_merge() {
+  im_merge_squash
+}
+
+im_merge_squash() {
+  # REQUIRED: --allow-unrelated-histories
+  if git merge $template_branch_main --allow-unrelated-histories --squash; then
+    im_cleanup
+  else
+    error $EC_IM_MERGE_SQUASH
+  fi
+}
+
+im_merge_squash_fail() {
+  im_cleanup
+}
+
+im_cleanup() {
+  commit_merge_changes
+  push_origin
+}
+
+push_origin() {
+  git push -u "$origin" "$origin_main"
+}
+
+commit_merge_changes() {
+  git commit -m "Merge changes from template"
+}
+
+# Merges in the changes from the template repo
+# If this is not the first time, we will cherry-pick the changes since the last time
+merge() {
+  # Check if the template tag exists
+  if [ "$(git tag -l $tag_name)" ]; then
+    cherry_pick
+  else
+    initial_merge
+  fi
+}
+
+# Update the tag to point to the latest commit and push
+update_tag() {
+  git tag -f $tag_name "$(git rev-parse --short $template_branch_main)"
+  git push -f --tag
+}
+
+update_current_branch() {
+  # If we were not previously on the 'main' branch,
+  # then check it out and merge in the changes
+  if [ "$init_branch" != $origin_main ]; then
+    checkout_init && git merge --no-ff $origin_main &> /dev/null
+  fi
+}
+
+post_success() {
+  update_tag
+  update_current_branch
+}
+
+main() {
+  case $(load_last_error) in
+  0)
+    # No error
+
+    # Check if there are working changes
+    if git diff --exit-code --quiet HEAD; then
+      # Update our repo references
+      if remote_fetch; then
+        # Run our merge script
+        merge
+      fi
+    else
+      echo
+      echo "You currently have uncommented changes!"
+      echo "Please stash or commit your changes before continuing"
+      echo
+
+      exit 1
+    fi
+    ;;
+
+  "$EC_IM_MERGE_SQUASH")
+    im_merge_squash_fail
+    ;;
+
+  "$EC_CP_COMMIT_MERGE_SQUASH")
+    cp_commit_merge_squash
+    ;;
+
+  "$EC_CP_CHERRY_PICK_MERGE_COMMIT")
+    cp_cherry_pick_merge_commit_fail
+    ;;
+  esac
+}
+
+##################################################################
+#                       Start Execution                          #
+##################################################################
+
+setup
+
+# Run the script
+if main; then
+  post_success
+
+  # Display success message
+  success_msg
+
+  # Teardown successfully
+  teardown_success
+else
+  fail_msg
+
+  teardown
+fi

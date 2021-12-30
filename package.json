@@ -48,7 +48,7 @@
       "deploy-and-graph": "yarn deploy && yarn graph-ship-local",
       "theme": "yarn app theme",
       "watch-theme": "yarn app watch",
-      "template:merge": "./scripts/template-merge.sh",
+      "template:merge": ".template/merge",
       "contracts": "yarn workspace @scaffold-eth/hardhat",
       "app": "yarn workspace @scaffold-eth/vite-app",
       "services": "yarn workspace @scaffold-eth/services",
