@@ -26,7 +26,7 @@ sequenceDiagram
 actor MarketPlaceCreator
 Creator ->> dApp: Click create market button
 Creator ->> dApp: Fill out form for the marketplace
-dApp ->>
+dApp ->> smartContracts:  
 ```
 
 ### Interfacing with your own marketplace
@@ -77,7 +77,10 @@ Creator ->> dApp: Fill out forms (specifically adding the datahash that identifi
     },
     "underwriters": ["cerise.eth", "dougking.eth"],
     "adhoc": {
-      // NEEDS TO BE A JSON (VALIDATE FROM FRONTEND)
+      "name": "cerise.eth json data schema",
+      "description": "my very own json data schema",
+      "type": "object",
+      "properties": {}
     }
   }
 }
