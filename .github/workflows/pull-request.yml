@@ -44,7 +44,7 @@ jobs:
           yarn contracts build
 
       - name: 'build production'
-        if: "$CI_BRANCH == app/**"
+        if: "$CI_COMMIT_BRANCH == app/**"
         run: |
           yarn start optimize --force 
           yarn build
