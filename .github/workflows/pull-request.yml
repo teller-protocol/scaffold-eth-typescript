@@ -44,7 +44,7 @@ jobs:
           yarn contracts build
 
       - name: 'build production'
-        if: ${{ github.ref == 'refs/heads/app/' }}
+        if: ${{ github.ref == 'refs/heads/app/**' }}
         run: |
           yarn start optimize --force 
           yarn build
