@@ -44,12 +44,10 @@ jobs:
           yarn contracts build
 
       - name: 'build production'
+        if: startsWith(${{github.ref}}, 'refs/heads/app/')
         run: |
-          if [[ ${{ github.ref }} =~ ^refs/heads/app/v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-              echo ::set-output name=match::true
-              yarn start optimize --force 
-              yarn build
-          fi
+          yarn start optimize --force 
+          yarn build
     #  - run: yarn hardhat:test
     #  - name: Publish Unit Test Results
     #    uses: EnricoMi/publish-unit-test-result-action@v1
