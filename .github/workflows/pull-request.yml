@@ -43,6 +43,9 @@ jobs:
         run: |
           yarn contracts build
 
+      - name: Run Unit Test
+      - run: yarn hardhat test
+
       - name: 'build production'
         if: startsWith(${{github.ref}}, 'refs/heads/app/')
         run: |
