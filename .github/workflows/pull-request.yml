@@ -37,13 +37,13 @@ jobs:
             ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
       - run: yarn install --immutable
 
-      - name: 'hardhat compile'
-        env:
-          DEFAULT_NETWORK: ${{ secrets.DEFAULT_NETWORK }}
-        run: |
-          yarn contracts build
+      # - name: 'hardhat compile'
+      #   env:
+      #     DEFAULT_NETWORK: ${{ secrets.DEFAULT_NETWORK }}
+      #   run: |
+      #     yarn contracts build
 
-      - name: Run Unit Test
+      - name: 'hardhat test'
         env:
             DEFAULT_NETWORK: ${{ secrets.DEFAULT_NETWORK }}
             MAINNET_RPC_URL: ${{ secrets.MAINNET_RPC_URL }}
