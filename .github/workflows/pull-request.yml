@@ -59,7 +59,7 @@ jobs:
         run: yarn contracts test
 
       - name: 'build production'
-        if: startsWith(${{github.ref}}, 'refs/heads/app/')
+        if: ${{ startsWith(github.head_ref, 'app/') }}
         run: |
           yarn start optimize --force 
           yarn build
