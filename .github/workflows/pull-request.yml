@@ -61,6 +61,7 @@ jobs:
       - name: 'build production'
         if: ${{ startsWith(github.head_ref, 'app/') }}
         run: |
+          yarn export
           yarn start optimize --force 
           yarn build
     #  - run: yarn hardhat:test
