@@ -1,7 +1,7 @@
 import '@nomiclabs/hardhat-ethers'
 import 'hardhat-deploy'
 
-import { BigNumber, BigNumberish, Contract, Signer } from 'ethers'
+import { BigNumber as BN, BigNumberish, Contract, Signer } from 'ethers'
 import { ERC20 } from 'generated/typechain'
 import { extendEnvironment } from 'hardhat/config'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
@@ -17,8 +17,8 @@ declare module 'hardhat/types/runtime' {
     tokens: TokensExtension
     evm: EVM
     getNamedSigner: (name: string) => Promise<Signer>
-    toBN: (amount: BigNumberish, decimals?: BigNumberish) => BigNumber
-    fromBN: (amount: BigNumberish, decimals?: BigNumberish) => BigNumber
+    toBN: (amount: BigNumberish, decimals?: BigNumberish) => BN
+    fromBN: (amount: BigNumberish, decimals?: BigNumberish) => BN
     log: (msg: string, config?: LogConfig) => void
   }
 }
@@ -62,8 +62,14 @@ interface AdvanceTimeOptions {
 
 interface EVM {
   /**
+   * This sets the timestamp of the next block that executes
+   * @param timestamp {moment.Moment} The Moment object that represents a timestamp.
+   */
+  setNextBlockTimestamp: (timestamp: moment.Moment) => Promise<void>
+
+  /**
    * This increases the next block's timestamp by the specified amount of seconds.
-   * @param seconds {BigNumberish} Amount of seconds to increase the next block's timestamp by.
+   * @param seconds {BigNumberish | moment.Duration} Amount of seconds to increase the next block's timestamp by.
    */
   advanceTime: (
     seconds: BigNumberish | moment.Duration,
@@ -77,7 +83,12 @@ interface EVM {
    * @param secsPerBlock {number} Determines how many seconds to increase time by for
    *  each block that is mined. Default is 15.
    */
-  advanceBlocks: (blocks?: number, secsPerBlock?: number) => Promise<void>
+  advanceBlocks: (blocks?: BigNumberish, secsPerBlock?: number) => Promise<void>
+
+  /**
+   * Mines a new block.
+   */
+  mine: () => Promise<void>
 
   /**
    * Creates a snapshot of the blockchain in its current state. It then returns a function
@@ -238,6 +249,12 @@ extendEnvironment((hre) => {
   }
 
   hre.evm = {
+    async setNextBlockTimestamp(timestamp: moment.Moment): Promise<void> {
+      await network.provider.send('evm_setNextBlockTimestamp', [
+        timestamp.unix(),
+      ])
+    },
+
     async advanceTime(
       seconds: BigNumberish | moment.Duration,
       options?: AdvanceTimeOptions
@@ -245,19 +262,26 @@ extendEnvironment((hre) => {
       const secs = moment.isDuration(seconds) ? seconds.asSeconds() : seconds
       if (options?.withoutBlocks) {
         await network.provider.send('evm_increaseTime', [secs])
-        if (options?.mine) await network.provider.send('evm_mine')
+        if (options?.mine) await this.mine()
       } else {
         const secsPerBlock = 15
-        const blocks = BigNumber.from(secs).div(secsPerBlock).toNumber()
+        const blocks = BN.from(secs).div(secsPerBlock)
         await this.advanceBlocks(blocks, secsPerBlock)
       }
     },
 
-    async advanceBlocks(blocks = 1, secsPerBlock = 15): Promise<void> {
-      for (let block = 0; block < blocks; block++) {
+    async advanceBlocks(
+      blocks: BigNumberish = 1,
+      secsPerBlock = 15
+    ): Promise<void> {
+      for (let block = 0; block < BN.from(blocks).toNumber(); block++) {
         await network.provider.send('evm_increaseTime', [secsPerBlock])
-        await network.provider.send('evm_mine')
+        await this.mine()
       }
+    },
+
+    async mine(): Promise<void> {
+      await network.provider.send('evm_mine')
     },
 
     async snapshot(): Promise<() => Promise<void>> {
@@ -296,22 +320,22 @@ extendEnvironment((hre) => {
     },
   }
 
-  hre.toBN = (amount: BigNumberish, decimals?: BigNumberish): BigNumber => {
+  hre.toBN = (amount: BigNumberish, decimals?: BigNumberish): BN => {
     if (typeof amount === 'string') {
       return ethers.utils.parseUnits(amount, decimals)
     }
 
-    const num = BigNumber.from(amount)
+    const num = BN.from(amount)
     if (decimals) {
-      return num.mul(BigNumber.from('10').pow(decimals))
+      return num.mul(BN.from('10').pow(decimals))
     }
     return num
   }
 
-  hre.fromBN = (amount: BigNumberish, decimals?: BigNumberish): BigNumber => {
-    const num = BigNumber.from(amount)
+  hre.fromBN = (amount: BigNumberish, decimals?: BigNumberish): BN => {
+    const num = BN.from(amount)
     if (decimals) {
-      return num.div(BigNumber.from('10').pow(decimals))
+      return num.div(BN.from('10').pow(decimals))
     }
     return num
   }
