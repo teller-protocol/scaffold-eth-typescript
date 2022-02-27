@@ -223,83 +223,87 @@ const ERC20ABI = [
   },
 ];
 const TellerETHFaucet = [
-  {
-    inputs: [],
-    stateMutability: 'payable',
-    type: 'constructor',
-  },
-  {
-    inputs: [],
-    name: 'addFunds',
-    outputs: [],
-    stateMutability: 'payable',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'amountAllowed',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'owner',
-    outputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address payable',
-        name: '_requestor',
-        type: 'address',
-      },
-    ],
-    name: 'requestTokens',
-    outputs: [],
-    stateMutability: 'payable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_amountAllowed',
-        type: 'uint256',
-      },
-    ],
-    name: 'setAmountallowed',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: '_owner',
-        type: 'address',
-      },
-    ],
-    name: 'setOwner',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
+	{
+		"inputs": [],
+		"stateMutability": "payable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [],
+		"name": "addFunds",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "amountAllowed",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address payable",
+				"name": "_requestor",
+				"type": "address"
+			}
+		],
+		"name": "drip",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_amountAllowed",
+				"type": "uint256"
+			}
+		],
+		"name": "setAmountallowed",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_owner",
+				"type": "address"
+			}
+		],
+		"name": "setOwner",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"stateMutability": "payable",
+		"type": "receive"
+	}
 ];
 
 // Mainnet DAI, Optimism and Arbitrium Rollup Contracts with local addresses
@@ -331,7 +335,7 @@ export default {
         abi: ERC20ABI,
       },
       TellerETHFaucet: {
-        address: '0xc344770Aa678740b087D3704620D3aeD667Ed2cB',
+        address: '0xE68086E1F4460b2eBaA0cEE06269c60b6a48e845',
         abi: TellerETHFaucet,
       },
     },
