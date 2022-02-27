@@ -222,566 +222,82 @@ const ERC20ABI = [
     type: 'event',
   },
 ];
-const DAIABI = [
+const TellerETHFaucet = [
   {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'chainId_',
-        type: 'uint256',
-      },
-    ],
-    payable: false,
-    stateMutability: 'nonpayable',
+    inputs: [],
+    stateMutability: 'payable',
     type: 'constructor',
   },
   {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'src',
-        type: 'address',
-      },
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'guy',
-        type: 'address',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'wad',
-        type: 'uint256',
-      },
-    ],
-    name: 'Approval',
-    type: 'event',
-  },
-  {
-    anonymous: true,
-    inputs: [
-      {
-        indexed: true,
-        internalType: 'bytes4',
-        name: 'sig',
-        type: 'bytes4',
-      },
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'usr',
-        type: 'address',
-      },
-      {
-        indexed: true,
-        internalType: 'bytes32',
-        name: 'arg1',
-        type: 'bytes32',
-      },
-      {
-        indexed: true,
-        internalType: 'bytes32',
-        name: 'arg2',
-        type: 'bytes32',
-      },
-      {
-        indexed: false,
-        internalType: 'bytes',
-        name: 'data',
-        type: 'bytes',
-      },
-    ],
-    name: 'LogNote',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'src',
-        type: 'address',
-      },
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'dst',
-        type: 'address',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'wad',
-        type: 'uint256',
-      },
-    ],
-    name: 'Transfer',
-    type: 'event',
-  },
-  {
-    constant: true,
     inputs: [],
-    name: 'DOMAIN_SEPARATOR',
-    outputs: [
-      {
-        internalType: 'bytes32',
-        name: '',
-        type: 'bytes32',
-      },
-    ],
-    payable: false,
-    stateMutability: 'view',
+    name: 'addFunds',
+    outputs: [],
+    stateMutability: 'payable',
     type: 'function',
   },
   {
-    constant: true,
     inputs: [],
-    name: 'PERMIT_TYPEHASH',
+    name: 'amountAllowed',
     outputs: [
       {
-        internalType: 'bytes32',
+        internalType: 'uint256',
         name: '',
-        type: 'bytes32',
+        type: 'uint256',
       },
     ],
-    payable: false,
     stateMutability: 'view',
     type: 'function',
   },
   {
-    constant: true,
-    inputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    name: 'allowance',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    payable: false,
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'usr',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'wad',
-        type: 'uint256',
-      },
-    ],
-    name: 'approve',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: '',
-        type: 'bool',
-      },
-    ],
-    payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    constant: true,
-    inputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    name: 'balanceOf',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    payable: false,
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'usr',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'wad',
-        type: 'uint256',
-      },
-    ],
-    name: 'burn',
-    outputs: [],
-    payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    constant: true,
     inputs: [],
-    name: 'decimals',
+    name: 'owner',
     outputs: [
       {
-        internalType: 'uint8',
+        internalType: 'address',
         name: '',
-        type: 'uint8',
+        type: 'address',
       },
     ],
-    payable: false,
     stateMutability: 'view',
     type: 'function',
   },
   {
-    constant: false,
     inputs: [
       {
-        internalType: 'address',
-        name: 'guy',
+        internalType: 'address payable',
+        name: '_requestor',
         type: 'address',
       },
     ],
-    name: 'deny',
+    name: 'requestTokens',
     outputs: [],
-    payable: false,
-    stateMutability: 'nonpayable',
+    stateMutability: 'payable',
     type: 'function',
   },
   {
-    constant: false,
     inputs: [
       {
-        internalType: 'address',
-        name: 'usr',
-        type: 'address',
-      },
-      {
         internalType: 'uint256',
-        name: 'wad',
+        name: '_amountAllowed',
         type: 'uint256',
       },
     ],
-    name: 'mint',
+    name: 'setAmountallowed',
     outputs: [],
-    payable: false,
     stateMutability: 'nonpayable',
     type: 'function',
   },
   {
-    constant: false,
     inputs: [
       {
         internalType: 'address',
-        name: 'src',
+        name: '_owner',
         type: 'address',
-      },
-      {
-        internalType: 'address',
-        name: 'dst',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'wad',
-        type: 'uint256',
       },
     ],
-    name: 'move',
+    name: 'setOwner',
     outputs: [],
-    payable: false,
     stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    constant: true,
-    inputs: [],
-    name: 'name',
-    outputs: [
-      {
-        internalType: 'string',
-        name: '',
-        type: 'string',
-      },
-    ],
-    payable: false,
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    constant: true,
-    inputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    name: 'nonces',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    payable: false,
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'holder',
-        type: 'address',
-      },
-      {
-        internalType: 'address',
-        name: 'spender',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'nonce',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'expiry',
-        type: 'uint256',
-      },
-      {
-        internalType: 'bool',
-        name: 'allowed',
-        type: 'bool',
-      },
-      {
-        internalType: 'uint8',
-        name: 'v',
-        type: 'uint8',
-      },
-      {
-        internalType: 'bytes32',
-        name: 'r',
-        type: 'bytes32',
-      },
-      {
-        internalType: 'bytes32',
-        name: 's',
-        type: 'bytes32',
-      },
-    ],
-    name: 'permit',
-    outputs: [],
-    payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'usr',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'wad',
-        type: 'uint256',
-      },
-    ],
-    name: 'pull',
-    outputs: [],
-    payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'usr',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'wad',
-        type: 'uint256',
-      },
-    ],
-    name: 'push',
-    outputs: [],
-    payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'guy',
-        type: 'address',
-      },
-    ],
-    name: 'rely',
-    outputs: [],
-    payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    constant: true,
-    inputs: [],
-    name: 'symbol',
-    outputs: [
-      {
-        internalType: 'string',
-        name: '',
-        type: 'string',
-      },
-    ],
-    payable: false,
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    constant: true,
-    inputs: [],
-    name: 'totalSupply',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    payable: false,
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'dst',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'wad',
-        type: 'uint256',
-      },
-    ],
-    name: 'transfer',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: '',
-        type: 'bool',
-      },
-    ],
-    payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'src',
-        type: 'address',
-      },
-      {
-        internalType: 'address',
-        name: 'dst',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'wad',
-        type: 'uint256',
-      },
-    ],
-    name: 'transferFrom',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: '',
-        type: 'bool',
-      },
-    ],
-    payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    constant: true,
-    inputs: [],
-    name: 'version',
-    outputs: [
-      {
-        internalType: 'string',
-        name: '',
-        type: 'string',
-      },
-    ],
-    payable: false,
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    constant: true,
-    inputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    name: 'wards',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    payable: false,
-    stateMutability: 'view',
     type: 'function',
   },
 ];
@@ -792,10 +308,38 @@ export default {
     contracts: {
       DAI: {
         address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
-        abi: DAIABI,
+        abi: ERC20ABI,
+      },
+      USDC: {
+        address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+        abi: ERC20ABI,
       },
       UNI: {
         address: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
+        abi: ERC20ABI,
+      },
+    },
+  },
+  4: {
+    contracts: {
+      DAI: {
+        address: '0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa',
+        abi: ERC20ABI,
+      },
+      USDC: {
+        address: '0x61A5Ce0f6bb2D5087a8baf72561fc2ea05778A25',
+        abi: ERC20ABI,
+      },
+      TellerETHFaucet: {
+        address: '0xc344770Aa678740b087D3704620D3aeD667Ed2cB',
+        abi: TellerETHFaucet,
+      },
+    },
+  },
+  80001: {
+    contracts: {
+      USDC: {
+        address: '0xa5437A2ace0df2831467b3Fade7a23e6F2F181F9',
         abi: ERC20ABI,
       },
     },
