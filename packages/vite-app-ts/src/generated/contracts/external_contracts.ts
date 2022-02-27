@@ -339,8 +339,12 @@ export default {
   80001: {
     contracts: {
       USDC: {
-        address: '0xa5437A2ace0df2831467b3Fade7a23e6F2F181F9',
+        address: '0xc64b6837b03C696AEa88c0F5d3f7e7aaCc8037ce',
         abi: ERC20ABI,
+      },
+      TellerETHFaucet: {
+        address: '0x30a5aA2466d45a78b3fFAc3FD4E6C49FBf2A3Cd9',
+        abi: TellerETHFaucet,
       },
     },
   },
