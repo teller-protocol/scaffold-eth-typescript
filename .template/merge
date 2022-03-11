@@ -14,7 +14,7 @@ tag_name="$template/latest-merge"
 template_url="https://github.com/teller-protocol/scaffold-eth-typescript.git"
 
 origin="origin"
-origin_main="main"
+origin_main="develop"
 origin_branch_main="$origin/$origin_main"
 
 tmp_branch_main="tmp/$origin_main"
