@@ -1,0 +1,7 @@
+*                       @teller-protocol/core-contributors 
+
+/packages/hardhat-ts    @teller-protocol/solidity-devs
+*.sol                   @teller-protocol/solidity-devs
+
+/packages/vite-app-ts   @teller-protocol/frontend-devs
+*.tsx                   @teller-protocol/frontend-devs
