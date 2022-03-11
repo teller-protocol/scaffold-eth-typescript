@@ -1,7 +1,7 @@
 import '@nomiclabs/hardhat-ethers'
 import 'hardhat-deploy'
 
-import { BigNumber as BN, BigNumberish, Contract, Signer } from 'ethers'
+import { BigNumber, BigNumberish, Contract, Signer } from 'ethers'
 import { ERC20 } from 'generated/typechain'
 import { extendEnvironment } from 'hardhat/config'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
@@ -17,8 +17,8 @@ declare module 'hardhat/types/runtime' {
     tokens: TokensExtension
     evm: EVM
     getNamedSigner: (name: string) => Promise<Signer>
-    toBN: (amount: BigNumberish, decimals?: BigNumberish) => BN
-    fromBN: (amount: BigNumberish, decimals?: BigNumberish) => BN
+    toBN: (amount: BigNumberish, decimals?: BigNumberish) => BigNumber
+    fromBN: (amount: BigNumberish, decimals?: BigNumberish) => BigNumber
     log: (msg: string, config?: LogConfig) => void
   }
 }
@@ -83,7 +83,7 @@ interface EVM {
    * @param secsPerBlock {number} Determines how many seconds to increase time by for
    *  each block that is mined. Default is 15.
    */
-  advanceBlocks: (blocks?: BigNumberish, secsPerBlock?: number) => Promise<void>
+  advanceBlocks: (blocks?: number, secsPerBlock?: number) => Promise<void>
 
   /**
    * Mines a new block.
@@ -259,22 +259,27 @@ extendEnvironment((hre) => {
       seconds: BigNumberish | moment.Duration,
       options?: AdvanceTimeOptions
     ): Promise<void> {
-      const secs = moment.isDuration(seconds) ? seconds.asSeconds() : seconds
+      const secs = moment.isDuration(seconds)
+        ? seconds
+        : moment.duration(BigNumber.from(seconds).toString(), 's')
       if (options?.withoutBlocks) {
-        await network.provider.send('evm_increaseTime', [secs])
+        const block = await ethers.provider.getBlock('latest')
+        const timestamp = moment(
+          secs.add(block.timestamp, 's').asMilliseconds()
+        )
+        await this.setNextBlockTimestamp(timestamp)
         if (options?.mine) await this.mine()
       } else {
         const secsPerBlock = 15
-        const blocks = BN.from(secs).div(secsPerBlock)
+        const blocks = BigNumber.from(secs.asSeconds())
+          .div(secsPerBlock)
+          .toNumber()
         await this.advanceBlocks(blocks, secsPerBlock)
       }
     },
 
-    async advanceBlocks(
-      blocks: BigNumberish = 1,
-      secsPerBlock = 15
-    ): Promise<void> {
-      for (let block = 0; block < BN.from(blocks).toNumber(); block++) {
+    async advanceBlocks(blocks = 1, secsPerBlock = 15): Promise<void> {
+      for (let block = 0; block < blocks; block++) {
         await network.provider.send('evm_increaseTime', [secsPerBlock])
         await this.mine()
       }
@@ -320,22 +325,22 @@ extendEnvironment((hre) => {
     },
   }
 
-  hre.toBN = (amount: BigNumberish, decimals?: BigNumberish): BN => {
+  hre.toBN = (amount: BigNumberish, decimals?: BigNumberish): BigNumber => {
     if (typeof amount === 'string') {
       return ethers.utils.parseUnits(amount, decimals)
     }
 
-    const num = BN.from(amount)
+    const num = BigNumber.from(amount)
     if (decimals) {
-      return num.mul(BN.from('10').pow(decimals))
+      return num.mul(BigNumber.from('10').pow(decimals))
     }
     return num
   }
 
-  hre.fromBN = (amount: BigNumberish, decimals?: BigNumberish): BN => {
-    const num = BN.from(amount)
+  hre.fromBN = (amount: BigNumberish, decimals?: BigNumberish): BigNumber => {
+    const num = BigNumber.from(amount)
     if (decimals) {
-      return num.div(BN.from('10').pow(decimals))
+      return num.div(BigNumber.from('10').pow(decimals))
     }
     return num
   }

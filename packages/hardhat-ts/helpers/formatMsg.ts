@@ -14,8 +14,8 @@ export const formatMsg = (
   result += msg
     .split('\n')
     .map((m) => {
-      let r = ''
-      if (star) r += `* ${m}`
+      let r = m
+      if (star) r = `* ${m}`
       r = '  '.repeat(indent) + r
       return r
     })
